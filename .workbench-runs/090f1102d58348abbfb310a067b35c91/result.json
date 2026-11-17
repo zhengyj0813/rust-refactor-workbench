@@ -1,0 +1,62 @@
+{
+  "task": "hard-edge_back",
+  "mode": "team",
+  "trial": 1,
+  "stage": "accepted",
+  "process_id": "090f1102d58348abbfb310a067b35c91",
+  "elapsed_seconds": 73.7266587999984,
+  "report": {
+    "accepted": true,
+    "patch": "",
+    "checks": [
+      {
+        "ok": true,
+        "command": [
+          "test",
+          "-p",
+          "petgraph",
+          "--test",
+          "hard_contract"
+        ],
+        "output": "test back_advances_once_and_interleaves_with_front ... ok\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s"
+      }
+    ],
+    "model_calls": 2,
+    "attempts": [
+      {
+        "attempt": 1,
+        "accepted": false,
+        "checks": [
+          {
+            "ok": false,
+            "command": [
+              "test",
+              "-p",
+              "petgraph",
+              "--test",
+              "hard_contract"
+            ],
+            "output": "test back_advances_once_and_interleaves_with_front ... FAILED\n  left: Some(2)\n right: Some(3)\ntest result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s"
+          }
+        ]
+      },
+      {
+        "attempt": 2,
+        "accepted": true,
+        "checks": [
+          {
+            "ok": true,
+            "command": [
+              "test",
+              "-p",
+              "petgraph",
+              "--test",
+              "hard_contract"
+            ],
+            "output": "test back_advances_once_and_interleaves_with_front ... ok\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s"
+          }
+        ]
+      }
+    ]
+  }
+}

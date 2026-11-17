@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Rust 重构工作台</title>
+<link rel="stylesheet" href="/style.css">
+<script src="/app.js" defer></script>
+<script src="/process.js" defer></script>
+</head>
+<body>
+<header class="mast"><div class="brand"><span>R</span> Rust 重构工作台</div><div class="environment">DeepSeek · Docker 验证</div></header>
+<main>
+<nav aria-label="工作区"><button id="work-tab" aria-pressed="true">重构工作台</button><button id="process-tab" aria-pressed="false">Agent 运行过程</button><button id="eval-tab" aria-pressed="false">评测对比</button><button id="patch-tab" aria-pressed="false">补丁版本</button></nav>
+<section id="work">
+<div class="intro"><p class="eyebrow">REFACTOR SESSION</p><h1>检查每一次重构</h1><p>选择 Rust 任务，运行 Agent，并查看补丁与验证证据。</p></div>
+<div class="method-entries" role="group" aria-label="重构方法">
+  <button type="button" data-method-task="method-refactor-extract" aria-pressed="false" disabled>
+    <strong>提取方法</strong><span>把一段逻辑提取成独立函数</span>
+  </button>
+  <button type="button" data-method-task="method-refactor-inline" aria-pressed="false" disabled>
+    <strong>内联方法</strong><span>把方法实现展开到调用处</span>
+  </button>
+  <button type="button" data-method-task="method-refactor-move" aria-pressed="false" disabled>
+    <strong>移动方法</strong><span>把方法迁到负责这段逻辑的类型</span>
+  </button>
+</div>
+<form class="setup panel" id="run-form">
+  <label>重构任务<select id="task"><option value="custom">自定义 Rust 仓库</option></select></label>
+  <label>Agent 模式<select id="mode"><option value="single" selected>单 Agent</option><option value="multi">提案与专项审查</option><option value="adaptive">按需协作</option><option value="team">多专家协作</option></select></label>
+  <p id="goal"></p>
+  <fieldset id="custom-fields" hidden>
+    <legend>仓库与编辑范围</legend>
+    <label class="full-width">本机仓库绝对路径
+      <input id="crate-path" placeholder="E:\Projects\my-crate" spellcheck="false">
+    </label>
+    <label>可编辑的 Rust 源文件（每行一个相对路径）
+      <textarea id="source-paths" rows="3" placeholder="src/lib.rs" spellcheck="false"></textarea>
+    </label>
+    <label>重构目标
+      <textarea id="custom-goal" rows="3" placeholder="消除这处 clone，同时保持公开 API 和行为"></textarea>
+    </label>
+    <label>Cargo 包名（可选，多个包用逗号分隔）
+      <input id="package-names" placeholder="my-crate" spellcheck="false">
+    </label>
+    <label>多 Agent 审查专家
+      <select id="review-domain"><option value="lifetime">所有权与生命周期</option><option value="concurrency">并发与同步</option></select>
+    </label>
+    <label class="checkbox-label"><input id="run-differential" type="checkbox">运行差分样例 refactor_diff</label>
+    <label>最大允许性能回退（%，可选）
+      <input id="max-regression" type="number" min="0" step="any" placeholder="填写后运行 refactor_bench">
+    </label>
+    <p class="full-width">运行时会将所选源文件和目标发送给 DeepSeek，并在 Docker 中验证候选补丁。</p>
+  </fieldset>
+  <button class="primary" id="run" type="submit" disabled>运行重构</button>
+</form>
+<p id="status" role="status"></p>
+<ol class="timeline" id="steps" aria-label="验证流程"></ol>
+<section class="panel result" aria-label="结果">
+<div class="result-top"><div><h2 id="result-title">补丁审查</h2><p id="result-source"></p></div><div><button id="manage-patch" hidden>管理补丁版本</button> <button id="export" disabled>导出补丁</button></div></div>
+<div class="tabs" id="details"><button data-view="patch" aria-pressed="true">重构前后对比</button><button data-view="collaboration" aria-pressed="false">专家协作</button><button data-view="reviews" aria-pressed="false">Agent 审查</button><button data-view="checks" aria-pressed="false">验证日志</button><button data-view="differential" aria-pressed="false">差分验证</button><button data-view="bench" aria-pressed="false">性能基准</button><button data-view="formal" aria-pressed="false">形式化验证与修订</button></div>
+<div id="detail"></div>
+</section>
+</section>
+<section id="process" hidden>
+  <div class="intro"><h1>Agent 运行过程</h1></div>
+  <div class="panel process-head">
+    <label>运行记录<select id="process-runs"></select></label>
+    <div><p id="process-goal"></p><p id="process-status" role="status"></p></div>
+  </div>
+  <div class="process-views" aria-label="查看方式">
+    <button id="process-story-tab" aria-pressed="true">过程讲解</button>
+    <button id="process-evidence-tab" aria-pressed="false">技术证据</button>
+  </div>
+  <div id="process-story" class="process-story"></div>
+  <div id="process-technical" class="process-layout" hidden>
+    <section class="panel process-column" aria-label="候选与阶段">
+      <h2>候选与阶段</h2>
+      <div id="process-events"></div>
+    </section>
+    <section class="panel process-column" aria-label="阶段证据">
+      <h2 id="process-evidence-title">阶段证据</h2>
+      <p id="process-evidence-time"></p>
+      <div id="process-evidence"></div>
+    </section>
+  </div>
+  <div class="process-actions"><button id="process-result" disabled>查看运行结果</button></div>
+</section>
+<section id="evaluation" hidden>
+<div class="intro"><p class="eyebrow">EVALUATION</p><h1>单 Agent 与多 Agent 对比</h1><p>查看相同任务在两种模式下的历史运行结果。</p></div>
+<div class="tabs"><label>评测数据<select id="dataset"><option value="runs">六道基础任务</option><option value="release">正式评测</option><option value="adaptive">按需协作对照</option><option value="adaptive_crossbeam">Crossbeam 按需协作</option><option value="method_comparison">三类重构同题对照</option><option value="adaptive_methods">三类重构 · 按需调度对照</option><option value="adaptive_holdout">按需调度 · 独立样例</option><option value="hard_cases">高难度验收 · 三种重构</option><option value="hard_review_audit">默认调度 · 补丁审查对照</option><option value="inline_iterator">内联专项 · 迭代器求值</option><option value="rem_expanded">REM 扩展评测</option><option value="repositories">真实仓库</option><option value="formal">SMT 与修订实验</option><option value="ablation">专家审查消融</option><option value="workspace">多 crate 工作区</option><option value="workspace_ablation">Crossbeam 审查成本</option><option value="expert_team">Crossbeam 多专家协作</option><option value="validation">差分与性能验证</option></select></label></div>
+<div id="metrics" class="metrics"></div>
+<div class="panel table-wrap"><table><thead><tr><th>任务</th><th>轮次</th><th>模式</th><th>结果</th><th>耗时</th><th>证据</th></tr></thead><tbody id="rows"></tbody></table></div>
+</section>
+<section id="patches" hidden>
+  <div class="intro"><h1>补丁版本</h1><p>查看通过验收的自定义任务补丁，检查、应用或回滚选定版本。</p></div>
+  <div class="panel patch-panel">
+    <label>已保存的版本<select id="patch-list"></select></label>
+    <div id="patch-info"></div>
+    <div class="patch-actions">
+      <button id="patch-check" disabled>检查能否应用</button>
+      <button id="patch-apply" class="primary" disabled>应用到源文件</button>
+      <button id="patch-rollback" disabled>回滚此补丁</button>
+      <button id="patch-evidence" disabled>查看验证记录</button>
+    </div>
+    <p id="patch-status" role="status"></p>
+  </div>
+</section>
+</main>
+</body>
+</html>

@@ -1,0 +1,1 @@
+{"edits":[{"path":"src/lib.rs","before":"fn checksum(bytes: Vec<u8>)","after":"fn checksum(bytes: &[u8])"},{"path":"src/lib.rs","before":"checksum(bytes.clone())","after":"checksum(bytes)"}]}

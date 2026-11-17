@@ -1,0 +1,9 @@
+{
+  "edits": [
+    {
+      "path": "src/lib.rs",
+      "before": "pub fn pick<'a>(left: &'a str, right: &'a str, threshold: usize) -> &'a str {\n    if left.len() >= threshold { left } else { right }\n}\n",
+      "after": "pub fn pick<'a>(left: &'a str, right: &'a str, threshold: usize) -> &'a str {\n    choose(left, right, threshold)\n}\nfn choose<'a>(left: &'a str, right: &'a str, threshold: usize) -> &'a str {\n    if left.len() >= threshold { left } else { right }\n}\n"
+    }
+  ]
+}

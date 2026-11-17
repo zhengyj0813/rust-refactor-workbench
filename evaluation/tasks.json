@@ -1,0 +1,93 @@
+[
+  {
+    "id": "clone-vec",
+    "crate": "examples/clone",
+    "files": [
+      "src/lib.rs"
+    ],
+    "goal": "Change private checksum to borrow &[u8] and remove the clone at its call site. Keep the public total signature.",
+    "expected": {
+      "src/lib.rs": [
+        "fn checksum\\(\\s*\\w+\\s*:\\s*&\\[u8\\]",
+        "checksum\\(\\s*(?:&\\s*)?bytes(?:\\.as_slice\\(\\))?\\s*\\)"
+      ]
+    },
+    "benchmark": true
+  },
+  {
+    "id": "clone-string",
+    "crate": "evaluation/clone-string",
+    "files": [
+      "src/lib.rs"
+    ],
+    "goal": "Remove the String clone. Change private count to take &str and update its caller. Keep measure's public signature.",
+    "expected": {
+      "src/lib.rs": [
+        "fn count\\(\\s*\\w+\\s*:\\s*&str",
+        "count\\(\\s*(?:&\\s*)?value(?:\\.as_str\\(\\))?\\s*\\)"
+      ]
+    }
+  },
+  {
+    "id": "cross-slice",
+    "crate": "evaluation/cross-slice",
+    "files": [
+      "src/lib.rs",
+      "src/worker.rs"
+    ],
+    "goal": "Change worker::count to borrow &[u8], and update measure to eliminate the clone. Keep measure's public signature.",
+    "expected": {
+      "src/worker.rs": [
+        "fn count\\(\\s*\\w+\\s*:\\s*&\\[u8\\]"
+      ],
+      "src/lib.rs": [
+        "worker::count\\(\\s*(?:&\\s*)?values(?:\\.as_slice\\(\\))?\\s*\\)"
+      ]
+    }
+  },
+  {
+    "id": "cross-text",
+    "crate": "evaluation/cross-text",
+    "files": [
+      "src/lib.rs",
+      "src/worker.rs"
+    ],
+    "goal": "Change worker::score to borrow &str and update measure to remove the clone. Keep measure's public signature.",
+    "expected": {
+      "src/worker.rs": [
+        "fn score\\(\\s*\\w+\\s*:\\s*&str"
+      ],
+      "src/lib.rs": [
+        "worker::score\\(\\s*(?:&\\s*)?value(?:\\.as_str\\(\\))?\\s*\\)"
+      ]
+    }
+  },
+  {
+    "id": "extract-prefix",
+    "crate": "evaluation/extract-prefix",
+    "files": [
+      "src/lib.rs"
+    ],
+    "goal": "Extract the existing expression into a private helper named nonempty_suffix. Call it from pick. Preserve the API and tie the output lifetime only to input.",
+    "expected": {
+      "src/lib.rs": [
+        "(?m)^fn nonempty_suffix\\s*[<(]",
+        "(?m)^\\s+nonempty_suffix\\("
+      ]
+    }
+  },
+  {
+    "id": "extract-choice",
+    "crate": "evaluation/extract-choice",
+    "files": [
+      "src/lib.rs"
+    ],
+    "goal": "Extract the branch into a private helper named choose. Call it from pick. Preserve the public signature and return a borrow from the selected input.",
+    "expected": {
+      "src/lib.rs": [
+        "(?m)^fn choose\\s*[<(]",
+        "(?m)^\\s+choose\\("
+      ]
+    }
+  }
+]

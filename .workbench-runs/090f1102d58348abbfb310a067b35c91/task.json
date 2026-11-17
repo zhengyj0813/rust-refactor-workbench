@@ -1,0 +1,8 @@
+{
+  "id": "090f1102d58348abbfb310a067b35c91",
+  "task": "hard-edge_back",
+  "goal": "Inline edge_index only at the EdgeIndices::next_back mapping call. Keep all other callers and the helper. Preserve exactly one back advancement, including when interleaved with front advancement, and preserve the empty iterator behavior.",
+  "mode": "team",
+  "repairs": 1,
+  "trial": 1
+}

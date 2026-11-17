@@ -1,0 +1,31 @@
+[
+  {
+    "id": "method-refactor-extract",
+    "crate": "evaluation/method-refactors",
+    "files": ["src/extract.rs"],
+    "goal": "Extract the fee computation subtotal / 10 from invoice_total into a new private free function named service_fee taking subtotal: u32 and returning u32. Replace the original expression with service_fee(subtotal). Keep the public signature, arithmetic, and evaluation order.",
+    "expected": {"src/extract.rs": ["(?m)^fn service_fee\\(", "\\bservice_fee\\(subtotal\\)"]},
+    "repairs": 1
+  },
+  {
+    "id": "method-refactor-inline",
+    "crate": "evaluation/method-refactors",
+    "files": ["src/inline.rs"],
+    "goal": "Inline private double into its only call inside doubled_next, then remove double. Evaluate next() exactly once into a local variable before adding the value to itself. Preserve the public signature and ordinary u32 addition, including its overflow behavior.",
+    "expected": {"src/inline.rs": ["let (?:mut )?\\w+ = next\\(\\);"]},
+    "expected_removed": {"src/inline.rs": ["(?m)^fn double\\("]},
+    "repairs": 1
+  },
+  {
+    "id": "method-refactor-move",
+    "crate": "evaluation/method-refactors",
+    "files": ["src/order.rs", "src/pricing.rs"],
+    "goal": "Move Order::discount from impl Order to the existing impl Pricing in src/pricing.rs. Remove the old method and make Order::total call self.pricing.discount(subtotal). Use pub(super) or pub(crate) visibility for the moved method, keep its u32 arithmetic and preserve all existing public APIs. Use the existing self.rate() in the new method.",
+    "expected": {
+      "src/order.rs": ["self\\.pricing\\.discount\\(subtotal\\)"],
+      "src/pricing.rs": ["pub\\((?:super|crate)\\)\\s+fn discount\\("]
+    },
+    "expected_removed": {"src/order.rs": ["(?m)^\\s*fn discount\\("]},
+    "repairs": 1
+  }
+]

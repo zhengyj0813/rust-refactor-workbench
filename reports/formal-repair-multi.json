@@ -1,0 +1,410 @@
+{
+  "accepted": true,
+  "checks": [
+    {
+      "command": [
+        "check",
+        "--all-targets"
+      ],
+      "ok": true,
+      "output": "    Checking formal-choice v0.1.0 (/crate)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.27s\n",
+      "elapsed_seconds": 0.5646198999984335
+    },
+    {
+      "command": [
+        "test"
+      ],
+      "ok": true,
+      "output": "\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 1 test\ntest covers_each_branch_away_from_the_boundary ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n   Compiling formal-choice v0.1.0 (/crate)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.63s\n     Running unittests src/lib.rs (target/debug/deps/formal_choice-18491728417e4734)\n     Running tests/contract.rs (target/debug/deps/contract-8cbcc19ebbeb79ef)\n   Doc-tests formal_choice\n",
+      "elapsed_seconds": 2.9624124000001757
+    }
+  ],
+  "patch": "--- a/src/lib.rs\n+++ b/src/lib.rs\n@@ -1,3 +1,6 @@\n pub fn pick<'a>(left: &'a str, right: &'a str, threshold: usize) -> &'a str {\n+    choose(left, right, threshold)\n+}\n+fn choose<'a>(left: &'a str, right: &'a str, threshold: usize) -> &'a str {\n     if left.len() >= threshold { left } else { right }\n }\n",
+  "candidate_sha256": "cc7fdcb9976d1ba9054d48f9114812798cc710c26c25e3be5c9d4c7fd2274631",
+  "baseline_checks": [
+    {
+      "command": [
+        "check",
+        "--all-targets"
+      ],
+      "ok": true,
+      "output": "    Checking formal-choice v0.1.0 (/crate)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.28s\n",
+      "elapsed_seconds": 0.5593736999999237
+    },
+    {
+      "command": [
+        "test"
+      ],
+      "ok": true,
+      "output": "\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 1 test\ntest covers_each_branch_away_from_the_boundary ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n   Compiling formal-choice v0.1.0 (/crate)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.61s\n     Running unittests src/lib.rs (target/debug/deps/formal_choice-18491728417e4734)\n     Running tests/contract.rs (target/debug/deps/contract-8cbcc19ebbeb79ef)\n   Doc-tests formal_choice\n",
+      "elapsed_seconds": 2.972472800000105
+    }
+  ],
+  "formal": {
+    "contract": "borrow-selection-v1",
+    "solver": "Z3",
+    "usize_bits": 64,
+    "operators": {
+      "baseline": ">=",
+      "candidate": ">="
+    },
+    "status": "unsat"
+  },
+  "reviews": [
+    {
+      "decision": "approve",
+      "reason": "The proposal extracts the body into a private `choose` function while preserving argument names, order, explicit `'a` lifetimes, return lifetime, and the `left.len() >= threshold` comparison. `pick` delegates directly to `choose`, so MIR behavior and borrowing semantics are unchanged. No ownership, safety, or synchronization invariants are affected."
+    }
+  ],
+  "attempts": [
+    {
+      "attempt": 1,
+      "parent_attempt": null,
+      "proposal": {
+        "edits": [
+          {
+            "path": "src/lib.rs",
+            "before": "pub fn pick<'a>(left: &'a str, right: &'a str, threshold: usize) -> &'a str {\n    if left.len() >= threshold { left } else { right }\n}\n",
+            "after": "pub fn pick<'a>(left: &'a str, right: &'a str, threshold: usize) -> &'a str {\n    choose(left, right, threshold)\n}\nfn choose<'a>(left: &'a str, right: &'a str, threshold: usize) -> &'a str {\n    if left.len() > threshold { left } else { right }\n}\n"
+          }
+        ]
+      },
+      "accepted": false,
+      "checks": [
+        {
+          "command": [
+            "check",
+            "--all-targets"
+          ],
+          "ok": true,
+          "output": "    Checking formal-choice v0.1.0 (/crate)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.26s\n",
+          "elapsed_seconds": 0.5362146999996185
+        },
+        {
+          "command": [
+            "test"
+          ],
+          "ok": true,
+          "output": "\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 1 test\ntest covers_each_branch_away_from_the_boundary ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n   Compiling formal-choice v0.1.0 (/crate)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.66s\n     Running unittests src/lib.rs (target/debug/deps/formal_choice-18491728417e4734)\n     Running tests/contract.rs (target/debug/deps/contract-8cbcc19ebbeb79ef)\n   Doc-tests formal_choice\n",
+          "elapsed_seconds": 3.0104107999995904
+        }
+      ],
+      "candidate_sha256": "18af4800959f3be0620f219748dd1a58a1e342a301da1a9b28bad5e7cf6a8999",
+      "baseline_checks": [
+        {
+          "command": [
+            "check",
+            "--all-targets"
+          ],
+          "ok": true,
+          "output": "    Checking formal-choice v0.1.0 (/crate)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.28s\n",
+          "elapsed_seconds": 0.5494249000003038
+        },
+        {
+          "command": [
+            "test"
+          ],
+          "ok": true,
+          "output": "\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 1 test\ntest covers_each_branch_away_from_the_boundary ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n   Compiling formal-choice v0.1.0 (/crate)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.64s\n     Running unittests src/lib.rs (target/debug/deps/formal_choice-18491728417e4734)\n     Running tests/contract.rs (target/debug/deps/contract-8cbcc19ebbeb79ef)\n   Doc-tests formal_choice\n",
+          "elapsed_seconds": 2.977535199999693
+        }
+      ],
+      "formal": {
+        "contract": "borrow-selection-v1",
+        "solver": "Z3",
+        "usize_bits": 64,
+        "operators": {
+          "baseline": ">=",
+          "candidate": ">"
+        },
+        "status": "sat",
+        "counterexample": {
+          "left_len": 1,
+          "threshold": 1,
+          "baseline_return": "left",
+          "candidate_return": "right"
+        }
+      },
+      "reviews": []
+    },
+    {
+      "attempt": 2,
+      "parent_attempt": 1,
+      "proposal": {
+        "edits": [
+          {
+            "path": "src/lib.rs",
+            "before": "pub fn pick<'a>(left: &'a str, right: &'a str, threshold: usize) -> &'a str {\n    if left.len() >= threshold { left } else { right }\n}\n",
+            "after": "pub fn pick<'a>(left: &'a str, right: &'a str, threshold: usize) -> &'a str {\n    choose(left, right, threshold)\n}\nfn choose<'a>(left: &'a str, right: &'a str, threshold: usize) -> &'a str {\n    if left.len() >= threshold { left } else { right }\n}\n"
+          }
+        ]
+      },
+      "accepted": true,
+      "checks": [
+        {
+          "command": [
+            "check",
+            "--all-targets"
+          ],
+          "ok": true,
+          "output": "    Checking formal-choice v0.1.0 (/crate)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.27s\n",
+          "elapsed_seconds": 0.5646198999984335
+        },
+        {
+          "command": [
+            "test"
+          ],
+          "ok": true,
+          "output": "\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 1 test\ntest covers_each_branch_away_from_the_boundary ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n   Compiling formal-choice v0.1.0 (/crate)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.63s\n     Running unittests src/lib.rs (target/debug/deps/formal_choice-18491728417e4734)\n     Running tests/contract.rs (target/debug/deps/contract-8cbcc19ebbeb79ef)\n   Doc-tests formal_choice\n",
+          "elapsed_seconds": 2.9624124000001757
+        }
+      ],
+      "candidate_sha256": "cc7fdcb9976d1ba9054d48f9114812798cc710c26c25e3be5c9d4c7fd2274631",
+      "baseline_checks": [
+        {
+          "command": [
+            "check",
+            "--all-targets"
+          ],
+          "ok": true,
+          "output": "    Checking formal-choice v0.1.0 (/crate)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.28s\n",
+          "elapsed_seconds": 0.5593736999999237
+        },
+        {
+          "command": [
+            "test"
+          ],
+          "ok": true,
+          "output": "\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 1 test\ntest covers_each_branch_away_from_the_boundary ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n   Compiling formal-choice v0.1.0 (/crate)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.61s\n     Running unittests src/lib.rs (target/debug/deps/formal_choice-18491728417e4734)\n     Running tests/contract.rs (target/debug/deps/contract-8cbcc19ebbeb79ef)\n   Doc-tests formal_choice\n",
+          "elapsed_seconds": 2.972472800000105
+        }
+      ],
+      "formal": {
+        "contract": "borrow-selection-v1",
+        "solver": "Z3",
+        "usize_bits": 64,
+        "operators": {
+          "baseline": ">=",
+          "candidate": ">="
+        },
+        "status": "unsat"
+      },
+      "reviews": [
+        {
+          "decision": "approve",
+          "reason": "The proposal extracts the body into a private `choose` function while preserving argument names, order, explicit `'a` lifetimes, return lifetime, and the `left.len() >= threshold` comparison. `pick` delegates directly to `choose`, so MIR behavior and borrowing semantics are unchanged. No ownership, safety, or synchronization invariants are affected."
+        }
+      ]
+    }
+  ],
+  "model_calls": 2,
+  "base_sources_sha256": "f939978e2d34eec496b612bfe418e3257898f6ddf71101dcb81d8e87a4b07658",
+  "agent_mode": "multi",
+  "elapsed_seconds": 19.597587199999907,
+  "execution": "docker",
+  "semantic": {
+    "syntax": {
+      "kind": "function_item",
+      "line": 1,
+      "column_bytes": 1,
+      "children": [
+        {
+          "kind": "visibility_modifier",
+          "line": 1,
+          "column_bytes": 1,
+          "text": "pub"
+        },
+        {
+          "kind": "identifier",
+          "line": 1,
+          "column_bytes": 8,
+          "text": "pick"
+        },
+        {
+          "kind": "type_parameters",
+          "line": 1,
+          "column_bytes": 12,
+          "children": [
+            {
+              "kind": "lifetime_parameter",
+              "line": 1,
+              "column_bytes": 13,
+              "children": [
+                {
+                  "kind": "lifetime",
+                  "line": 1,
+                  "column_bytes": 13,
+                  "children": [
+                    {
+                      "kind": "identifier",
+                      "line": 1,
+                      "column_bytes": 14,
+                      "text": "a"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "parameters",
+          "line": 1,
+          "column_bytes": 16,
+          "children": [
+            {
+              "kind": "parameter",
+              "line": 1,
+              "column_bytes": 17,
+              "children": [
+                {
+                  "kind": "identifier",
+                  "line": 1,
+                  "column_bytes": 17,
+                  "text": "left"
+                },
+                {
+                  "kind": "reference_type",
+                  "line": 1,
+                  "column_bytes": 23,
+                  "children": [
+                    {
+                      "kind": "lifetime",
+                      "line": 1,
+                      "column_bytes": 24,
+                      "text": "'a"
+                    },
+                    {
+                      "kind": "primitive_type",
+                      "line": 1,
+                      "column_bytes": 27,
+                      "text": "str"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "kind": "parameter",
+              "line": 1,
+              "column_bytes": 32,
+              "children": [
+                {
+                  "kind": "identifier",
+                  "line": 1,
+                  "column_bytes": 32,
+                  "text": "right"
+                },
+                {
+                  "kind": "reference_type",
+                  "line": 1,
+                  "column_bytes": 39,
+                  "children": [
+                    {
+                      "kind": "lifetime",
+                      "line": 1,
+                      "column_bytes": 40,
+                      "text": "'a"
+                    },
+                    {
+                      "kind": "primitive_type",
+                      "line": 1,
+                      "column_bytes": 43,
+                      "text": "str"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "kind": "parameter",
+              "line": 1,
+              "column_bytes": 48,
+              "children": [
+                {
+                  "kind": "identifier",
+                  "line": 1,
+                  "column_bytes": 48,
+                  "text": "threshold"
+                },
+                {
+                  "kind": "primitive_type",
+                  "line": 1,
+                  "column_bytes": 59,
+                  "text": "usize"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "reference_type",
+          "line": 1,
+          "column_bytes": 69,
+          "children": [
+            {
+              "kind": "lifetime",
+              "line": 1,
+              "column_bytes": 70,
+              "children": [
+                {
+                  "kind": "identifier",
+                  "line": 1,
+                  "column_bytes": 71,
+                  "text": "a"
+                }
+              ]
+            },
+            {
+              "kind": "primitive_type",
+              "line": 1,
+              "column_bytes": 73,
+              "text": "str"
+            }
+          ]
+        },
+        {
+          "kind": "block",
+          "line": 1,
+          "column_bytes": 77,
+          "children": [
+            {
+              "kind": "expression_statement",
+              "line": 2,
+              "column_bytes": 5,
+              "children": [
+                {
+                  "kind": "if_expression",
+                  "line": 2,
+                  "column_bytes": 5,
+                  "children": [
+                    {
+                      "kind": "binary_expression",
+                      "line": 2,
+                      "column_bytes": 8,
+                      "text": "left.len() >= threshold"
+                    },
+                    {
+                      "kind": "block",
+                      "line": 2,
+                      "column_bytes": 32,
+                      "text": "{ left }"
+                    },
+                    {
+                      "kind": "else_clause",
+                      "line": 2,
+                      "column_bytes": 41,
+                      "text": "else { right }"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "mir": "fn pick(_1: &str, _2: &str, _3: usize) -> &str {\n    debug left => _1;\n    debug right => _2;\n    debug threshold => _3;\n    let mut _0: &str;\n    let mut _4: bool;\n    let mut _5: usize;\n\n    bb0: {\n        _5 = core::str::<impl str>::len(copy _1) -> [return: bb1, unwind continue];\n    }\n\n    bb1: {\n        _4 = Ge(move _5, copy _3);\n        switchInt(move _4) -> [0: bb3, otherwise: bb2];\n    }\n\n    bb2: {\n        _0 = copy _1;\n        goto -> bb4;\n    }\n\n    bb3: {\n        _0 = copy _2;\n        goto -> bb4;\n    }\n\n    bb4: {\n        return;\n    }\n}",
+    "compiler_image": "rust:1.85"
+  }
+}

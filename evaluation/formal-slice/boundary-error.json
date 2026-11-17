@@ -1,0 +1,9 @@
+{
+  "edits": [
+    {
+      "path": "src/lib.rs",
+      "before": "pub fn window(input: &[u8], start: usize, end: usize) -> Option<&[u8]> {\n    input.get(start..end)\n}\n",
+      "after": "pub fn window(input: &[u8], start: usize, end: usize) -> Option<&[u8]> {\n    slice_window(input, start, end)\n}\nfn slice_window(input: &[u8], start: usize, end: usize) -> Option<&[u8]> {\n    input.get(0..end)\n}\n"
+    }
+  ]
+}

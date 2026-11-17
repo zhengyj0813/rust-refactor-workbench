@@ -1,0 +1,7 @@
+{
+  "id": "58606942329041dab76cf8adb6915617",
+  "task": "method-refactor-extract",
+  "goal": "Extract the fee computation subtotal / 10 from invoice_total into a new private free function named service_fee taking subtotal: u32 and returning u32. Replace the original expression with service_fee(subtotal). Keep the public signature, arithmetic, and evaluation order.",
+  "mode": "single",
+  "repairs": 1
+}

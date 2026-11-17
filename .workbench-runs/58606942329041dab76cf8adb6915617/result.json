@@ -1,0 +1,132 @@
+{
+  "task": "method-refactor-extract",
+  "mode": "single",
+  "stage": "accepted",
+  "exit_code": 0,
+  "elapsed_seconds": 17.905615099996794,
+  "stderr": "",
+  "report": {
+    "accepted": true,
+    "checks": [
+      {
+        "command": [
+          "check",
+          "--all-targets"
+        ],
+        "ok": true,
+        "output": "    Checking method-refactors v0.1.0 (/crate)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.36s\n",
+        "elapsed_seconds": 0.6615669000020716
+      },
+      {
+        "command": [
+          "test"
+        ],
+        "ok": true,
+        "output": "\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 3 tests\ntest extracting_fee_preserves_rounding ... ok\ntest moved_discount_preserves_results_and_public_calls ... ok\ntest inlined_argument_is_evaluated_once ... ok\n\ntest result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n   Compiling method-refactors v0.1.0 (/crate)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 3.20s\n     Running unittests src/lib.rs (target/debug/deps/method_refactors-712b071d26d3486e)\n     Running tests/contract.rs (target/debug/deps/contract-f3a29218ea175845)\n   Doc-tests method_refactors\n",
+        "elapsed_seconds": 3.6245890999998664
+      }
+    ],
+    "patch": "--- a/src/extract.rs\n+++ b/src/extract.rs\n@@ -1,5 +1,9 @@\n pub fn invoice_total(price: u32, quantity: u32) -> u32 {\n     let subtotal = price * quantity;\n-    let fee = subtotal / 10;\n+    let fee = service_fee(subtotal);\n     subtotal + fee\n }\n+\n+fn service_fee(subtotal: u32) -> u32 {\n+    subtotal / 10\n+}\n",
+    "candidate_sha256": "c99c3a65c7107bb2f59b3ebe60a78e1826dca229e091db656ff062587e8ecd35",
+    "file_versions": {
+      "src/extract.rs": {
+        "before": "c09afbaca25d5c700fd618042e5a6a5106726b8bb45545fc35c832e1a932ad0d",
+        "after": "a3e65c5d0b4da3545040db87cdfb9c00fab0bfe2bfe88a9ac19bd28f49bd859b"
+      }
+    },
+    "baseline_checks": [
+      {
+        "command": [
+          "check",
+          "--all-targets"
+        ],
+        "ok": true,
+        "output": "    Checking method-refactors v0.1.0 (/crate)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.81s\n",
+        "elapsed_seconds": 5.051727799997025
+      },
+      {
+        "command": [
+          "test"
+        ],
+        "ok": true,
+        "output": "\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 3 tests\ntest extracting_fee_preserves_rounding ... ok\ntest moved_discount_preserves_results_and_public_calls ... ok\ntest inlined_argument_is_evaluated_once ... ok\n\ntest result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n   Compiling method-refactors v0.1.0 (/crate)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 3.21s\n     Running unittests src/lib.rs (target/debug/deps/method_refactors-712b071d26d3486e)\n     Running tests/contract.rs (target/debug/deps/contract-f3a29218ea175845)\n   Doc-tests method_refactors\n",
+        "elapsed_seconds": 3.6185937999980524
+      }
+    ],
+    "reviews": [],
+    "attempts": [
+      {
+        "attempt": 1,
+        "parent_attempt": null,
+        "proposal": {
+          "edits": [
+            {
+              "path": "src/extract.rs",
+              "before": "pub fn invoice_total(price: u32, quantity: u32) -> u32 {\n    let subtotal = price * quantity;\n    let fee = subtotal / 10;\n    subtotal + fee\n}\n",
+              "after": "pub fn invoice_total(price: u32, quantity: u32) -> u32 {\n    let subtotal = price * quantity;\n    let fee = service_fee(subtotal);\n    subtotal + fee\n}\n\nfn service_fee(subtotal: u32) -> u32 {\n    subtotal / 10\n}\n"
+            }
+          ]
+        },
+        "accepted": true,
+        "checks": [
+          {
+            "command": [
+              "check",
+              "--all-targets"
+            ],
+            "ok": true,
+            "output": "    Checking method-refactors v0.1.0 (/crate)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.36s\n",
+            "elapsed_seconds": 0.6615669000020716
+          },
+          {
+            "command": [
+              "test"
+            ],
+            "ok": true,
+            "output": "\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 3 tests\ntest extracting_fee_preserves_rounding ... ok\ntest moved_discount_preserves_results_and_public_calls ... ok\ntest inlined_argument_is_evaluated_once ... ok\n\ntest result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n   Compiling method-refactors v0.1.0 (/crate)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 3.20s\n     Running unittests src/lib.rs (target/debug/deps/method_refactors-712b071d26d3486e)\n     Running tests/contract.rs (target/debug/deps/contract-f3a29218ea175845)\n   Doc-tests method_refactors\n",
+            "elapsed_seconds": 3.6245890999998664
+          }
+        ],
+        "candidate_sha256": "c99c3a65c7107bb2f59b3ebe60a78e1826dca229e091db656ff062587e8ecd35",
+        "file_versions": {
+          "src/extract.rs": {
+            "before": "c09afbaca25d5c700fd618042e5a6a5106726b8bb45545fc35c832e1a932ad0d",
+            "after": "a3e65c5d0b4da3545040db87cdfb9c00fab0bfe2bfe88a9ac19bd28f49bd859b"
+          }
+        },
+        "baseline_checks": [
+          {
+            "command": [
+              "check",
+              "--all-targets"
+            ],
+            "ok": true,
+            "output": "    Checking method-refactors v0.1.0 (/crate)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.81s\n",
+            "elapsed_seconds": 5.051727799997025
+          },
+          {
+            "command": [
+              "test"
+            ],
+            "ok": true,
+            "output": "\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 3 tests\ntest extracting_fee_preserves_rounding ... ok\ntest moved_discount_preserves_results_and_public_calls ... ok\ntest inlined_argument_is_evaluated_once ... ok\n\ntest result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n   Compiling method-refactors v0.1.0 (/crate)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 3.21s\n     Running unittests src/lib.rs (target/debug/deps/method_refactors-712b071d26d3486e)\n     Running tests/contract.rs (target/debug/deps/contract-f3a29218ea175845)\n   Doc-tests method_refactors\n",
+            "elapsed_seconds": 3.6185937999980524
+          }
+        ],
+        "reviews": []
+      }
+    ],
+    "model_calls": 1,
+    "model_timings": [
+      {
+        "stage": "proposal",
+        "seconds": 4.640060700003232
+      }
+    ],
+    "base_sources_sha256": "bd294ff3f3affacc875bdf4ac0a19e1f683f2bb46d4fae66e6ad5995977ba8db",
+    "agent_mode": "single",
+    "elapsed_seconds": 17.69848710000224,
+    "execution": "docker",
+    "missing_expected_edits": []
+  }
+}

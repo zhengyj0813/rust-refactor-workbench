@@ -1,0 +1,100 @@
+[
+  {
+    "id": "formal-agent-choice-correct",
+    "crate": "evaluation/formal-choice",
+    "files": [
+      "src/lib.rs"
+    ],
+    "formal": "agent",
+    "repairs": 0,
+    "proposal": "evaluation/formal-choice/correct.json",
+    "goal": "Extract pick into a private choose. Keep the existing names, parameter order, explicit lifetimes and if/else shape. Given identical input lengths and threshold, preserve which input is returned. Use the existing if/else form and no additional code or comments.",
+    "expected": {
+      "src/lib.rs": [
+        "fn choose<'a>\\(",
+        "choose\\(left, right, threshold\\)"
+      ]
+    }
+  },
+  {
+    "id": "formal-agent-choice-boundary-error",
+    "crate": "evaluation/formal-choice",
+    "files": [
+      "src/lib.rs"
+    ],
+    "formal": "agent",
+    "repairs": 0,
+    "proposal": "evaluation/formal-choice/boundary-error.json",
+    "goal": "Extract pick into a private choose. Keep the existing names, parameter order, explicit lifetimes and if/else shape. Given identical input lengths and threshold, preserve which input is returned. Use the existing if/else form and no additional code or comments.",
+    "expected": {
+      "src/lib.rs": [
+        "fn choose<'a>\\(",
+        "choose\\(left, right, threshold\\)"
+      ]
+    }
+  },
+  {
+    "id": "formal-agent-slice-correct",
+    "crate": "evaluation/formal-slice",
+    "files": [
+      "src/lib.rs"
+    ],
+    "formal": "agent",
+    "repairs": 0,
+    "proposal": "evaluation/formal-slice/correct.json",
+    "goal": "Extract window into a private slice_window. Keep the same function signatures, exact parameter names, order and public wrapper delegation. Preserve None and the exact half-open start and end of the returned slice. Use input.get with the original half-open range form and avoid additional code or comments in the repair.",
+    "expected": {
+      "src/lib.rs": [
+        "fn slice_window\\("
+      ]
+    }
+  },
+  {
+    "id": "formal-agent-slice-boundary-error",
+    "crate": "evaluation/formal-slice",
+    "files": [
+      "src/lib.rs"
+    ],
+    "formal": "agent",
+    "repairs": 0,
+    "proposal": "evaluation/formal-slice/boundary-error.json",
+    "goal": "Extract window into a private slice_window. Keep the same function signatures, exact parameter names, order and public wrapper delegation. Preserve None and the exact half-open start and end of the returned slice. Use input.get with the original half-open range form and avoid additional code or comments in the repair.",
+    "expected": {
+      "src/lib.rs": [
+        "fn slice_window\\("
+      ]
+    }
+  },
+  {
+    "id": "formal-agent-slice-unsupported",
+    "crate": "evaluation/formal-slice",
+    "files": [
+      "src/lib.rs"
+    ],
+    "formal": "agent",
+    "repairs": 0,
+    "proposal": "evaluation/formal-slice/unsupported.json",
+    "goal": "Extract window into a private slice_window. Keep the same function signatures, exact parameter names, order and public wrapper delegation. Preserve None and the exact half-open start and end of the returned slice. Use input.get with the original half-open range form and avoid additional code or comments in the repair.",
+    "expected": {
+      "src/lib.rs": [
+        "fn slice_window\\("
+      ]
+    }
+  },
+  {
+    "id": "formal-agent-slice-repair",
+    "crate": "evaluation/formal-slice",
+    "files": [
+      "src/lib.rs"
+    ],
+    "formal": "agent",
+    "repairs": 1,
+    "proposal": "evaluation/formal-slice/boundary-error.json",
+    "goal": "Extract window into a private slice_window. Keep the same function signatures, exact parameter names, order and public wrapper delegation. Preserve None and the exact half-open start and end of the returned slice. Use input.get with the original half-open range form and avoid additional code or comments in the repair.",
+    "expected": {
+      "src/lib.rs": [
+        "fn slice_window\\("
+      ]
+    }
+  }
+]
